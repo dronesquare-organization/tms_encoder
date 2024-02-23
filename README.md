@@ -55,3 +55,11 @@ area_polygon = [  # 구역을 지정하는 다각형 x,y좌표 배열
 # OUTPUT
 inner_tiles = encoder.polygon2tms(Polygon(*[Point(x, y) for x, y in area_polygon]))
 ```
+
+### 테스트
+
+아래와 같이 test.py를 실행하세요
+
+```shell
+python {패키지 경로}/test.py
+```
