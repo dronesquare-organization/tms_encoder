@@ -31,14 +31,20 @@ class TmsConverter:
     def tms2lnglat(self, x, y):
         # TMS에서 사용되는 y 좌표 변환 (TMS는 y 좌표가 반대로 계산될 수 있음)
         n = 2.0**self.z
-        y = n - y - 1
+        y = n - y - 1  # TMS에서 사용되는 y 좌표 변환
 
-        # 경위도 계산
-        lng = x / n * 360.0 - 180.0
-        lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * y / n)))
-        lat = math.degrees(lat_rad)
+        # 타일 좌상단 모서리의 경위도 계산
+        lng_left = x / n * 360.0 - 180.0
+        lat_rad_top = math.atan(math.sinh(math.pi * (1 - 2 * y / n)))
+        lat_top = math.degrees(lat_rad_top)
 
-        return (lng, lat)
+        # 타일의 중심에 해당하는 경위도 변화량을 계산하여 추가
+        lng_center = lng_left + (360.0 / n) / 2  # 타일 하나당 경도 변화량의 절반을 추가
+        lat_rad_bottom = math.atan(math.sinh(math.pi * (1 - 2 * (y + 1) / n)))
+        lat_bottom = math.degrees(lat_rad_bottom)
+        lat_center = (lat_top + lat_bottom) / 2  # 타일 상단과 하단의 위도 평균
+
+        return (lng_center, lat_center)
 
     def lnglat2tms(self, lng, lat):
         lat_rad = math.radians(lat)
